@@ -1,0 +1,30 @@
+/* Navbar.css */
+.navbar {
+    background-color: #001f3f;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+  }
+  
+  .menu-icon, .cart-icon {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .menu-icon img, .cart-icon img {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .search-bar {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .search-bar input {
+    width: 60%;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+  }
+  
