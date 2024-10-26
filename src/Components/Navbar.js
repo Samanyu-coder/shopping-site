@@ -1,5 +1,6 @@
 // Navbar.js
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/Navbar.css';
 import menu from '../Images/menu.png';
 import cart from '../Images/cart.png';
@@ -31,11 +32,23 @@ function Navbar() {
       <div className={`side-menu ${isOpen ? 'open' : ''}`} onClick={closeMenu}>
         <div className="menu-content" onClick={(e) => e.stopPropagation()}>
           <ul>
-            <li>View Profile</li>
+            <li>
+              <Link to="/wishlist" onClick={closeMenu}>
+                Wishlist
+              </Link>
+            </li>
             <hr />
-            <li>Wishlist</li>
+            <li>
+              <Link to="/profile" onClick={closeMenu}>
+                View Profile
+              </Link>
+            </li>
             <hr />
-            <li>Orders</li>
+            <li>
+              <Link to="/orders" onClick={closeMenu}>
+                Orders
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
