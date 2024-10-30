@@ -1,0 +1,20 @@
+/* ProductDetail.css */
+.product-detail {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .product-detail img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .product-detail h2 {
+    font-size: 2em;
+    margin-top: 10px;
+  }
+  
+  .product-detail p {
+    font-size: 1.2em;
+  }
+  

@@ -1,10 +1,10 @@
 // App.js
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './Components/Navbar';
 import ProductList from './Components/ProductList';
+import ProductDetail from './Components/ProductDetail'; // Import the ProductDetail component
 import Footer from './Components/Footer';
-import Wishlist from './Components/Wishlist';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<ProductList />} />
-          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/product/:id" element={<ProductDetail />} /> {/* Route for product detail */}
         </Routes>
         <Footer />
       </div>
