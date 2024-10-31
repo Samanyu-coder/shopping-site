@@ -11,8 +11,14 @@ function ProductDetail() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/product/${id}/?format=json`)
+    axios.get(`https://16eb-2405-201-8006-7041-c36-da4c-1720-8a3.ngrok-free.app/product/detail/${id}/?format=json`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      }
+    })
       .then(response => {
+        console.log('Full API response:', response); // Log the full response
         setProduct(response.data);
         setLoading(false);
       })
@@ -31,12 +37,30 @@ function ProductDetail() {
     return <div>Error: {error}</div>;
   }
 
+  const stockStatusStyle = {
+    color: product.available ? 'green' : 'red'
+  };
+
   return (
     <div className="product-detail">
-      <img src={product.image} alt={product.name} />
-      <h2>{product.name}</h2>
-      <p>{product.price}</p>
-      <p>{product.description}</p>
+      <div className="product-detail-container">
+        {product.image_path ? (
+          <img src={product.image_path} alt={product.name} />
+        ) : (
+          <div className="image-placeholder">Image not available</div>
+        )}
+        <div className="product-info">
+          <h2>{product.name}</h2>
+          <p className="product-price">${product.price}</p>
+          <div className="product-description">
+            <h3>Description</h3>
+            <p>{product.description}</p>
+          </div>
+          <p className="stock-status" style={stockStatusStyle}>
+            {product.available ? 'In Stock' : 'Out of Stock'}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

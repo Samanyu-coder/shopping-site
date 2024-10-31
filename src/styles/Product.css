@@ -1,4 +1,9 @@
 /* Product.css */
+.product-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .product-tile {
   position: relative;
   background-color: white;
