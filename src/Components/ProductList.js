@@ -9,8 +9,15 @@ function ProductList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Function to get user ID, returns 0 if user is not logged in
+  const getUserId = () => {
+    const user = JSON.parse(localStorage.getItem('user')); // Example of getting user from localStorage
+    return user ? user.id : 0; // Default to 0 if not logged in
+  };
+
   useEffect(() => {
-    axios.get('https://16eb-2405-201-8006-7041-c36-da4c-1720-8a3.ngrok-free.app/product/list/?format=json', {
+    const userId = getUserId();
+    axios.get(`https://16eb-2405-201-8006-7041-c36-da4c-1720-8a3.ngrok-free.app/product/list/${userId}/?format=json`, {
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true'
@@ -19,14 +26,12 @@ function ProductList() {
       .then(response => {
         console.log('Full API response:', response); // Log the entire response object
         console.log('API response data:', response.data); // Log response data
-
         const data = response.data;
         if (Array.isArray(data)) {
           setProducts(data);
         } else if (data && typeof data === 'object') {
           const productsArray = data.products || Object.values(data);
           console.log('Extracted products:', productsArray);
-
           if (Array.isArray(productsArray)) {
             setProducts(productsArray);
           } else {

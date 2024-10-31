@@ -50,13 +50,13 @@ const LoginRegister = () => {
                 body: JSON.stringify({
                     first_name: firstName,
                     last_name: lastName,
-                    email,
-                    password,
+                    email: email,
+                    password: password,
                     phone: phoneNumber,
-                    address,
-                    city,
-                    state,
-                    country,
+                    address: address,
+                    city: city,
+                    state: state,
+                    country: country,
                     pin_code: pincode,
                     date_of_birth: dateOfBirth
                 })
