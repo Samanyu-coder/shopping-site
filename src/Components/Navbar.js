@@ -32,6 +32,18 @@ function Navbar() {
       <div className={`side-menu ${isOpen ? 'open' : ''}`} onClick={closeMenu}>
         <div className="menu-content" onClick={(e) => e.stopPropagation()}>
           <ul>
+          <li>
+              <Link to="/" onClick={closeMenu}>
+                Home
+              </Link>
+            </li>
+            <hr />
+          <li>
+              <Link to="/login" onClick={closeMenu}>
+                SignUp/Login
+              </Link>
+            </li>
+            <hr />
             <li>
               <Link to="/wishlist" onClick={closeMenu}>
                 Wishlist
@@ -49,6 +61,13 @@ function Navbar() {
                 Orders
               </Link>
             </li>
+            {/* <hr /> */}
+            {/* <hr /> */}
+            {/* <li>
+              <Link to="/Login" onClick={closeMenu}>
+                Login
+              </Link>
+            </li> */}
           </ul>
         </div>
       </div>
