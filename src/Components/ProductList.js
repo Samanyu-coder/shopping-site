@@ -1,18 +1,61 @@
 // ProductList.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Product from './Product';
+import axios from 'axios';
 import '../styles/ProductList.css';
 
-const products = [
-  { id: 1, name: 'Product 1', price: '$10', image: 'image1.jpg' },
-  { id: 2, name: 'Product 2', price: '$20', image: 'image2.jpg' },
-  { id: 3, name: 'Product 3', price: '$30', image: 'image3.jpg' },
-  { id: 4, name: 'Product 4', price: '$40', image: 'image4.jpg' },
-  { id: 5, name: 'Product 5', price: '$50', image: 'image5.jpg' },
-  { id: 6, name: 'Product 6', price: '$60', image: 'image6.jpg' }
-];
-
 function ProductList() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/product/list/?format=json', {
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      }
+    })
+      .then(response => {
+        console.log('Full API response:', response); // Log the entire response object
+        console.log('API response data:', response.data); // Log response data
+
+        const data = response.data;
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else if (data && typeof data === 'object') {
+          const productsArray = data.products || Object.values(data);
+          console.log('Extracted products:', productsArray);
+
+          if (Array.isArray(productsArray)) {
+            setProducts(productsArray);
+          } else {
+            setError('Extracted data is not an array');
+          }
+        } else {
+          setError('Data format is not supported');
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching the products:', error);
+        setError('Error fetching the products');
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (products.length === 0) {
+    return <div>No products available</div>;
+  }
+
   return (
     <div className="product-list">
       {products.map(product => (
@@ -23,4 +66,3 @@ function ProductList() {
 }
 
 export default ProductList;
-

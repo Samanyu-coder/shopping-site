@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './Components/Navbar';
 import ProductList from './Components/ProductList';
+import ProductDetail from './Components/ProductDetail'; // Import the ProductDetail component
 import Footer from './Components/Footer';
 import Wishlist from './Components/Wishlist';
 import LoginRegister from './Components/LoginRegister';
@@ -34,3 +35,4 @@ function AppContent() {
   );
 }
 export default App;
+
