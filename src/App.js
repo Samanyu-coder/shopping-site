@@ -7,6 +7,7 @@ import ProductDetail from './Components/ProductDetail';
 import Wishlist from './Components/Wishlist';
 import LoginRegister from './Components/LoginRegister';
 import Footer from './Components/Footer';
+import ProfileSettings from './Components/ProfileSettings';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/login" element={<LoginRegister />} />
+            <Route path="/profile" element={<ProfileSettings />} />
           </Routes>
         </main>
         <Footer />

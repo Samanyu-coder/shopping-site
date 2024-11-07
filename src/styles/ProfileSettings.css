@@ -1,0 +1,120 @@
+/* ProfileSettings.css */
+
+/* General styling */
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  color: #333;
+  background-color: #e6f7ff; /* Light blue background for the whole page */
+  min-height: 100vh;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+.user-profile {
+  font-size: 36px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  background: #f0f8ff; /* Light bluish background for the content box */
+  border-radius: 10px;
+  padding: 20px 40px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.profile-field label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #555;
+  flex: 1;
+}
+
+.profile-field input {
+  border: 1px solid #b0c4de; /* Light steel blue border */
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #333;
+  padding: 8px 12px;
+  font-size: 14px;
+  width: 60%;
+  flex: 2;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.profile-field input:focus {
+  border-color: #5b9bd5; /* Slightly brighter blue focus border */
+  outline: none;
+}
+
+.profile-field button {
+  margin-left: 10px;
+  padding: 6px 12px;
+  background-color: #5b9bd5; /* Blue button color */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.profile-field button:hover {
+  background-color: #4a90e2; /* Slightly darker blue on hover */
+}
+
+button.delete-account {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #ff4d4d; /* Soft red color for delete */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+button.delete-account:hover {
+  background-color: #e60000; /* Darker red on hover */
+}
+
+.edit-save-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #3cb371; /* Medium sea green for save */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.edit-save-btn:hover {
+  background-color: #2e8b57; /* Darker green on hover */
+}
+
+input[type="file"] {
+  display: none;
+}

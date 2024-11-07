@@ -22,7 +22,7 @@ const LoginRegister = () => {
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
 
-    const apiUrl = 'https://16eb-2405-201-8006-7041-c36-da4c-1720-8a3.ngrok-free.app/user';
+    const apiUrl = 'https://62be-2405-201-8006-7041-5082-8df6-3712-a11f.ngrok-free.app/user';
 
     useEffect(() => {
         const savedEmail = localStorage.getItem('email');
