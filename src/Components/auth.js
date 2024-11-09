@@ -1,5 +1,5 @@
 // auth.js
-const apiUrl = 'https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/user';
+const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/user`;
 
 export const loginUser = async (email, password, rememberMe) => {
     try {

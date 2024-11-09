@@ -11,7 +11,7 @@ function Cart() {
   const navigate = useNavigate();
 
   const checkLoggedIn = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user_id'));
     return user ? user.id : null;
   };
 
@@ -22,7 +22,7 @@ function Cart() {
       return;
     }
 
-    axios.get('https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/user/add_to_cart/', {
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/user/add_to_cart/`, {
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',

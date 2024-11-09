@@ -22,7 +22,7 @@ function ProductDetail() {
   const userId = getUserId();
 
   useEffect(() => {
-    axios.get(`https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/product/detail/${id}/?format=json`, {
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/product/detail/${id}/?format=json`, {
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true'
@@ -39,7 +39,7 @@ function ProductDetail() {
         setLoading(false);
       });
 
-    axios.get(`https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/product/get_review/${id}/`, {
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/product/get_review/${id}/`, {
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true'
@@ -60,7 +60,7 @@ function ProductDetail() {
 
   const handleAddToWishlist = async () => {
     try {
-      const response = await axios.post('https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/add_to_wishlist', {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/add_to_wishlist`, {
         user_id: userId,
         product_id: id
       });
@@ -78,7 +78,7 @@ function ProductDetail() {
 
   const handleAddToCart = async () => {
     try {
-      const response = await axios.post('https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/user/add_to_cart/', {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/user/add_to_cart/`, {
         user_id: userId,
         product_id: id,
         quantity: 1 // Adjust the quantity as needed

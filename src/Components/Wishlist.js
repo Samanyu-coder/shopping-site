@@ -24,7 +24,7 @@ function Wishlist() {
       return;
     }
 
-    axios.get('https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/get_wishlist', {
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/get_wishlist`, {
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',

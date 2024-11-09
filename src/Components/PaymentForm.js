@@ -24,7 +24,7 @@ const PaymentForm = ({ orderId }) => {
     if (error) {
       setErrorMessage(error.message);
     } else {
-      const response = await fetch(`https://6b42-2405-201-8006-7041-5b0-2494-67e1-de1f.ngrok-free.app/payment/make_payment/${orderId}/`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/payment/make_payment/${orderId}/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/ProfileSettings.css';
 
-const baseURL = 'http://127.0.0.1:8000/';
+const baseURL = `${process.env.REACT_APP_API_BASE_URL}`;
 
 const ProfileSettings = () => {
   const [user, setUser] = useState(null);
