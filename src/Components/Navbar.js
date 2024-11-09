@@ -1,7 +1,5 @@
-// Navbar.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios for making HTTP requests
 import '../styles/Navbar.css';
 import menu from '../Images/menu.png';
 import cart from '../Images/cart.png';
@@ -22,21 +20,7 @@ function Navbar() {
   const handleSearch = async (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      try {
-        const response = await axios.post(
-          `${process.env.REACT_APP_API_BASE_URL}/search`, // Use environment variable
-          { query: searchQuery },
-          {
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-        // Navigate to the search results page with the search results
-        navigate('/search', { state: { results: response.data } });
-      } catch (error) {
-        console.error('Error fetching search results:', error);
-      }
+      navigate('/search', { state: { query: searchQuery } });
     }
   };
 
@@ -66,16 +50,9 @@ function Navbar() {
             placeholder="Search..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSearch(e);
-              }
-            }}
             required
           />
-          {searchQuery && (
-            <button type="submit" className="search-button custom-search-button">→</button>
-          )}
+          <button type="submit" className="search-button custom-search-button">→</button>
         </form>
         <div className="cart-icon" onClick={handleCartClick}>
           <img src={cart} alt="cart" />

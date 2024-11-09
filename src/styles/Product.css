@@ -43,21 +43,3 @@
   color: #666;
   font-size: 1em;
 }
-
-.wishlist-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
-}
-
-.wishlist-button img {
-  width: 24px;
-  height: 24px;
-  transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-.wishlist-button img.wishlisted {
-  filter: invert(40%) sepia(98%) saturate(749%) hue-rotate(320deg) brightness(97%) contrast(106%);
-  transform: scale(1.2);
-}

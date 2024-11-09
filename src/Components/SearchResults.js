@@ -5,11 +5,8 @@ import axios from 'axios';
 import Product from './Product';
 import '../styles/SearchResults.css';
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
 function SearchResults() {
+  const location = useLocation();
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,26 +16,31 @@ function SearchResults() {
     brand: '',
     price: ''
   });
-  const query = useQuery().get('query');
+  const query = location.state?.query || '';
 
   useEffect(() => {
-    fetchResults();
+    if (query) {
+      fetchResults();
+    }
   }, [query, filters]);
 
   const fetchResults = () => {
-    // Add your API endpoint here
+    setLoading(true);
     axios.post(`${process.env.REACT_APP_API_BASE_URL}/product/search/`, {
+      name: query,
+      ...filters
+    }, {
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true'
-      },
-      params: {
-        query: query,
-        ...filters
       }
     })
       .then(response => {
-        setResults(response.data);
+        if (Array.isArray(response.data)) {
+          setResults(response.data);
+        } else {
+          setResults([]); // Ensure results is an array
+        }
         setLoading(false);
       })
       .catch(error => {

@@ -10,20 +10,18 @@ function Wishlist() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-  const checkLoggedIn = () => {
+  const isLoggedIn = () => {
     const user = localStorage.getItem('user_id');
     return user ? user : null;
   };
 
-  const userId = checkLoggedIn();
-
   useEffect(() => {
-    if (!userId) {
-      navigate('/login'); // Redirect to login if not logged in
+    if (!isLoggedIn()) {
+      navigate('/login');
       return;
     }
 
+    const userId = isLoggedIn();
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/user/get_wishlist/${userId}`, {
       headers: {
         'Content-Type': 'application/json',
@@ -31,7 +29,11 @@ function Wishlist() {
       }
     })
       .then(response => {
-        setWishlist(response.data);
+        if (Array.isArray(response.data)) {
+          setWishlist(response.data);
+        } else {
+          setWishlist([]); // Set an empty array if the response is not an array
+        }
         setLoading(false);
       })
       .catch(error => {
@@ -39,7 +41,7 @@ function Wishlist() {
         setError('Error fetching the wishlist');
         setLoading(false);
       });
-  }, [userId, navigate]);
+  }, [navigate]);
 
   if (loading) {
     return <div>Loading...</div>;

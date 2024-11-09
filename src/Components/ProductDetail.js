@@ -1,13 +1,13 @@
 // ProductDetail.js
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/ProductDetail.css';
 import wishlistIcon from '../Images/wishlist-icon.png';
 
 function ProductDetail() {
   const { id } = useParams(); // Get the product ID from the URL
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
