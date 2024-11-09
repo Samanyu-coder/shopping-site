@@ -6,6 +6,8 @@ import ProductList from './Components/ProductList';
 import ProductDetail from './Components/ProductDetail';
 import Wishlist from './Components/Wishlist';
 import LoginRegister from './Components/LoginRegister';
+import SearchResults from './Components/SearchResults';
+import Cart from './Components/Cart';
 import Footer from './Components/Footer';
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/login" element={<LoginRegister />} />
+            <Route path="/search" element={<SearchResults />} />
+            <Route path="/cart" element={<Cart />} />
           </Routes>
         </main>
         <Footer />

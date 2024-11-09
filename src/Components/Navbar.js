@@ -1,12 +1,14 @@
 // Navbar.js
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Navbar.css';
 import menu from '../Images/menu.png';
 import cart from '../Images/cart.png';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -16,58 +18,76 @@ function Navbar() {
     setIsOpen(false);
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?query=${searchQuery}`);
+    }
+  };
+
+  const checkLoggedIn = () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user ? user.id : null;
+  };
+
+  const handleCartClick = () => {
+    const userId = checkLoggedIn();
+    if (userId) {
+      navigate('/cart');
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <>
       <nav className="navbar">
         <div className="menu-icon" onClick={toggleMenu}>
           <img src={menu} alt="menu" />
         </div>
-        <div className="search-bar">
-          <input type="text" placeholder="Search..." />
-        </div>
-        <div className="cart-icon">
+        <form className="search-bar" onSubmit={handleSearch}>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch(e);
+              }
+            }}
+            required
+          />
+          {searchQuery && (
+            <button type="submit" className="search-button custom-search-button">→</button>
+          )}
+        </form>
+        <div className="cart-icon" onClick={handleCartClick}>
           <img src={cart} alt="cart" />
         </div>
       </nav>
       <div className={`side-menu ${isOpen ? 'open' : ''}`} onClick={closeMenu}>
         <div className="menu-content" onClick={(e) => e.stopPropagation()}>
           <ul>
-          <li>
-              <Link to="/" onClick={closeMenu}>
-                Home
-              </Link>
-            </li>
-            <hr />
-          <li>
-              <Link to="/login" onClick={closeMenu}>
-                SignUp/Login
-              </Link>
+            <li>
+              <Link to="/" onClick={closeMenu}>Home</Link>
             </li>
             <hr />
             <li>
-              <Link to="/wishlist" onClick={closeMenu}>
-                Wishlist
-              </Link>
+              <Link to="/login" onClick={closeMenu}>SignUp/Login</Link>
             </li>
             <hr />
             <li>
-              <Link to="/profile" onClick={closeMenu}>
-                View Profile
-              </Link>
+              <Link to="/wishlist" onClick={closeMenu}>Wishlist</Link>
             </li>
             <hr />
             <li>
-              <Link to="/orders" onClick={closeMenu}>
-                Orders
-              </Link>
+              <Link to="/profile" onClick={closeMenu}>View Profile</Link>
             </li>
-            {/* <hr /> */}
-            {/* <hr /> */}
-            {/* <li>
-              <Link to="/Login" onClick={closeMenu}>
-                Login
-              </Link>
-            </li> */}
+            <hr />
+            <li>
+              <Link to="/orders" onClick={closeMenu}>Orders</Link>
+            </li>
           </ul>
         </div>
       </div>
