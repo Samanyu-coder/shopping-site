@@ -41,8 +41,8 @@ function Navbar() {
   };
 
   const checkLoggedIn = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return user ? user.id : null;
+    const user = localStorage.getItem('user_id');
+    return user ? user : null;
   };
 
   const handleCartClick = () => {

@@ -12,8 +12,8 @@ function Wishlist() {
   const navigate = useNavigate();
 
   const checkLoggedIn = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return user ? user.id : null;
+    const user = localStorage.getItem('user_id');
+    return user ? user : null;
   };
 
   const userId = checkLoggedIn();
@@ -24,11 +24,10 @@ function Wishlist() {
       return;
     }
 
-    axios.get(`${process.env.REACT_APP_API_BASE_URL}/get_wishlist`, {
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/user/get_wishlist/${userId}`, {
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',
-        'user_id': userId
       }
     })
       .then(response => {

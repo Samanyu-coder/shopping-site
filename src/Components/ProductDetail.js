@@ -15,8 +15,8 @@ function ProductDetail() {
   const [reviews, setReviews] = useState([]); // Initialize as an empty array
 
   const getUserId = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return user ? user.id : 0; // Default user ID is 0 if not logged in
+    const user = localStorage.getItem('user_id');
+    return user ? user : 0; // Default user ID is 0 if not logged in
   };
 
   const userId = getUserId();
@@ -60,10 +60,7 @@ function ProductDetail() {
 
   const handleAddToWishlist = async () => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/add_to_wishlist`, {
-        user_id: userId,
-        product_id: id
-      });
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/user/add_to_wishlist/${userId}/${id}`);
       if (response.status === 200) {
         setIsWishlisted(true);
         alert('Added to wishlist');
@@ -81,7 +78,6 @@ function ProductDetail() {
       const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/user/add_to_cart/`, {
         user_id: userId,
         product_id: id,
-        quantity: 1 // Adjust the quantity as needed
       });
       if (response.status === 200) {
         alert('Added to cart');
@@ -107,48 +103,52 @@ function ProductDetail() {
   };
 
   return (
-    <div className="product-detail">
-      <div className="product-detail-container">
-        {product.image_path ? (
-          <img src={product.image_path} alt={product.name} />
-        ) : (
-          <div className="image-placeholder">Image not available</div>
-        )}
-        <div className="product-info">
-          <h2>{product.name}</h2>
-          <p className="product-price">${product.price}</p>
-          <div className="product-description">
-            <h3>Description</h3>
-            <p>{product.description}</p>
-          </div>
-          <p className="stock-status" style={stockStatusStyle}>
-            {product.available ? 'In Stock' : 'Out of Stock'}
-          </p>
-          <div className="wishlist-button" onClick={handleAddToWishlist}>
-            <img src={wishlistIcon} alt="wishlist" />
-            {isWishlisted && <span>Added to Wishlist</span>}
-          </div>
-          <button className="add-to-cart-button" onClick={handleAddToCart}>
-            Add to Cart
-          </button>
-          <div className="reviews-section">
-            <h3>Reviews</h3>
-            {reviews.length > 0 ? (
-              <ul>
-                {reviews.map((review, index) => (
-                  <li key={index}>
-                    <p>{review.comment}</p>
-                    <p><strong>Rating:</strong> {review.rating}</p>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No reviews available</p>
-            )}
+    <>
+      <div className="wishlist-container">
+        <div className="wishlist-button" onClick={handleAddToWishlist}>
+          <img src={wishlistIcon} alt="wishlist" />
+          {isWishlisted && <span>Added to Wishlist</span>}
+        </div>
+      </div>
+      <div className="product-detail">
+        <div className="product-detail-container">
+          {product.image_path ? (
+            <img src={product.image_path} alt={product.name} />
+          ) : (
+            <div className="image-placeholder">Image not available</div>
+          )}
+          <div className="product-info">
+            <h2>{product.name}</h2>
+            <p className="product-price">${product.price}</p>
+            <div className="product-description">
+              <h3>Description</h3>
+              <p>{product.description}</p>
+            </div>
+            <p className="stock-status" style={stockStatusStyle}>
+              {product.available ? 'In Stock' : 'Out of Stock'}
+            </p>
+            <button className="add-to-cart-button" onClick={handleAddToCart}>
+              Add to Cart
+            </button>
+            <div className="reviews-section">
+              <h3>Reviews</h3>
+              {reviews.length > 0 ? (
+                <ul>
+                  {reviews.map((review, index) => (
+                    <li key={index}>
+                      <p>{review.comment}</p>
+                      <p><strong>Rating:</strong> {review.rating}</p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No reviews available</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

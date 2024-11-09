@@ -2,35 +2,37 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Cart.css';
+import '../styles/Cart.css';;
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-  const checkLoggedIn = () => {
-    const user = JSON.parse(localStorage.getItem('user_id'));
-    return user ? user.id : null;
+  const isLoggedIn = () => {
+    const user = localStorage.getItem('user_id');
+    return user ? user : null;
   };
 
   useEffect(() => {
-    const userId = checkLoggedIn();
-    if (!userId) {
+    if (!isLoggedIn()) {
       navigate('/login');
       return;
     }
 
-    axios.get(`${process.env.REACT_APP_API_BASE_URL}/user/add_to_cart/`, {
+    const userId = isLoggedIn();
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/user/get_cart/${userId}/`, {
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',
-        'user_id': userId
       }
     })
       .then(response => {
-        setCartItems(response.data);
+        if (Array.isArray(response.data)) {
+          setCartItems(response.data);
+        } else {
+          setCartItems([]);
+        }
         setLoading(false);
       })
       .catch(error => {
