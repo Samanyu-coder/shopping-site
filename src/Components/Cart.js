@@ -1,12 +1,11 @@
-// Wishlist.js
+// Cart.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Wishlist.css';
-import Product from './Product';
+import '../styles/Cart.css';
 
-function Wishlist() {
-  const [wishlist, setWishlist] = useState([]);
+function Cart() {
+  const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -16,15 +15,14 @@ function Wishlist() {
     return user ? user.id : null;
   };
 
-  const userId = checkLoggedIn();
-
   useEffect(() => {
+    const userId = checkLoggedIn();
     if (!userId) {
-      navigate('/login'); // Redirect to login if not logged in
+      navigate('/login');
       return;
     }
 
-    axios.get('https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/get_wishlist', {
+    axios.get('https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/user/add_to_cart/', {
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',
@@ -32,15 +30,15 @@ function Wishlist() {
       }
     })
       .then(response => {
-        setWishlist(response.data);
+        setCartItems(response.data);
         setLoading(false);
       })
       .catch(error => {
-        console.error('Error fetching the wishlist:', error);
-        setError('Error fetching the wishlist');
+        console.error('Error fetching the cart items:', error);
+        setError('Error fetching the cart items');
         setLoading(false);
       });
-  }, [userId, navigate]);
+  }, [navigate]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -50,17 +48,24 @@ function Wishlist() {
     return <div>Error: {error}</div>;
   }
 
-  if (wishlist.length === 0) {
-    return <div>No items in wishlist</div>;
+  if (cartItems.length === 0) {
+    return <div>No items in cart</div>;
   }
 
   return (
-    <div className="wishlist">
-      {wishlist.map(product => (
-        <Product key={product.id} product={product} />
-      ))}
+    <div className="cart">
+      <h2>Shopping Cart</h2>
+      <ul>
+        {cartItems.map((item, index) => (
+          <li key={index}>
+            <p>{item.product_name}</p>
+            <p>{item.quantity}</p>
+            <p>${item.price}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
 
-export default Wishlist;
+export default Cart;

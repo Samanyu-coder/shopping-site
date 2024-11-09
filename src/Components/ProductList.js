@@ -17,7 +17,7 @@ function ProductList() {
 
   useEffect(() => {
     const userId = getUserId();
-    axios.get(`https://16eb-2405-201-8006-7041-c36-da4c-1720-8a3.ngrok-free.app/product/list/${userId}/?format=json`, {
+    axios.get(`https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app//product/list/${userId}/?format=json`, {
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true'

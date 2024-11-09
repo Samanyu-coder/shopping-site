@@ -6,22 +6,23 @@ import '../styles/ProductDetail.css';
 import wishlistIcon from '../Images/wishlist-icon.png';
 
 function ProductDetail() {
-  const { id } = useParams();
+  const { id } = useParams(); // Get the product ID from the URL
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [reviews, setReviews] = useState([]); // Initialize as an empty array
 
   const getUserId = () => {
     const user = JSON.parse(localStorage.getItem('user'));
-    return user ? user.id : 0;
+    return user ? user.id : 0; // Default user ID is 0 if not logged in
   };
 
   const userId = getUserId();
 
   useEffect(() => {
-    axios.get(`https://16eb-2405-201-8006-7041-c36-da4c-1720-8a3.ngrok-free.app/product/detail/${id}/?format=json`, {
+    axios.get(`https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/product/detail/${id}/?format=json`, {
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true'
@@ -37,15 +38,29 @@ function ProductDetail() {
         setError('Error fetching the product details');
         setLoading(false);
       });
+
+    axios.get(`https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/product/get_review/${id}/`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      }
+    })
+      .then(response => {
+        if (Array.isArray(response.data)) {
+          setReviews(response.data);
+        } else {
+          setReviews([]); // Set an empty array if the response is not an array
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching reviews:', error);
+        setReviews([]);
+      });
   }, [id]);
 
   const handleAddToWishlist = async () => {
-    if (!userId) {
-      navigate('/login');
-      return;
-    }
     try {
-      const response = await axios.post('https://16eb-2405-201-8006-7041-c36-da4c-1720-8a3.ngrok-free.app/add_to_wishlist', {
+      const response = await axios.post('https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/add_to_wishlist', {
         user_id: userId,
         product_id: id
       });
@@ -58,6 +73,24 @@ function ProductDetail() {
     } catch (error) {
       console.error('Error adding to wishlist:', error);
       alert('Error adding to wishlist');
+    }
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      const response = await axios.post('https://8d05-2409-4088-9cb8-d2ac-41ba-69f4-c8-af2f.ngrok-free.app/user/add_to_cart/', {
+        user_id: userId,
+        product_id: id,
+        quantity: 1 // Adjust the quantity as needed
+      });
+      if (response.status === 200) {
+        alert('Added to cart');
+      } else {
+        throw new Error('Failed to add to cart');
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      alert('Error adding to cart');
     }
   };
 
@@ -94,6 +127,24 @@ function ProductDetail() {
           <div className="wishlist-button" onClick={handleAddToWishlist}>
             <img src={wishlistIcon} alt="wishlist" />
             {isWishlisted && <span>Added to Wishlist</span>}
+          </div>
+          <button className="add-to-cart-button" onClick={handleAddToCart}>
+            Add to Cart
+          </button>
+          <div className="reviews-section">
+            <h3>Reviews</h3>
+            {reviews.length > 0 ? (
+              <ul>
+                {reviews.map((review, index) => (
+                  <li key={index}>
+                    <p>{review.comment}</p>
+                    <p><strong>Rating:</strong> {review.rating}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No reviews available</p>
+            )}
           </div>
         </div>
       </div>
