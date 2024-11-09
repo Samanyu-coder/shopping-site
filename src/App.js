@@ -12,7 +12,7 @@ import SearchResults from './Components/SearchResults';
 import Cart from './Components/Cart';
 import Footer from './Components/Footer';
 import ProfileSettings from './Components/ProfileSettings';
-import PaymentForm from './Components/PaymentForm'; // Import PaymentForm
+import PaymentForm from './Components/PaymentForm';
 import ViewOrders from './Components/ViewOrders';
 
 // Initialize Stripe with your publishable key
@@ -33,10 +33,12 @@ function App() {
             <Route path="/login" element={<LoginRegister />} />
             <Route path="/profile" element={<ProfileSettings />} />
             <Route path="/orders" element={<ViewOrders />} />
+            <Route path="/search" element={<SearchResults />} />
+            <Route path="/cart" element={<Cart />} />
             <Route
               path="/payment"
               element={
-                <Elements stripe={stripePromise}> {/* Wrap in Elements */}
+                <Elements stripe={stripePromise}>
                   <PaymentForm orderId={orderId} />
                 </Elements>
               }
