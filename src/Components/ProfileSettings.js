@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/ProfileSettings.css';
 
-const baseURL = 'https://62be-2405-201-8006-7041-5082-8df6-3712-a11f.ngrok-free.app';
-const userId = 6; // Set user ID to 3
+const baseURL = 'http://127.0.0.1:8000/';
 
 const ProfileSettings = () => {
   const [user, setUser] = useState(null);
@@ -24,22 +23,38 @@ const ProfileSettings = () => {
 
   useEffect(() => {
     const fetchUserProfile = async () => {
+      const userId = localStorage.getItem('user_id');
+      if (!userId) {
+        console.error("User ID not found in local storage.");
+        return;
+      }
+
       try {
         const response = await fetch(`${baseURL}/user/profile/${userId}/`);
-        const data = await response.json();
-        setUser(data);
-        setFormData({
-          first_name: data.first_name,
-          last_name: data.last_name,
-          email: data.email,
-          phone: data.phone,
-          address: data.address,
-          city: data.city,
-          state: data.state,
-          country: data.country,
-          pin_code: data.pin_code,
-          date_of_birth: data.date_of_birth,
-        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          setUser(data);
+          setFormData({
+            first_name: data.first_name,
+            last_name: data.last_name,
+            email: data.email,
+            phone: data.phone,
+            address: data.address,
+            city: data.city,
+            state: data.state,
+            country: data.country,
+            pin_code: data.pin_code,
+            date_of_birth: data.date_of_birth,
+          });
+        } else {
+          throw new Error("Expected JSON but received a different content type.");
+        }
       } catch (error) {
         console.error('Error fetching user profile:', error);
       }
@@ -58,13 +73,15 @@ const ProfileSettings = () => {
 
   const handleSave = async () => {
     setLoadingSave(true);
+    const userId = localStorage.getItem('user_id');
+
     try {
       await fetch(`${baseURL}/user/update/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: userId, ...formData }), // Use userId here
+        body: JSON.stringify({ id: userId, ...formData }),
       });
       alert('Changes saved successfully!');
       setEditingField(null);
@@ -81,13 +98,15 @@ const ProfileSettings = () => {
     );
     if (confirmed) {
       setLoadingDelete(true);
+      const userId = localStorage.getItem('user_id');
+
       try {
         await fetch(`${baseURL}/user/delete/`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ id: userId }), // Use userId here
+          body: JSON.stringify({ id: userId }),
         });
         setUser(null);
         alert('Account deleted successfully!');
@@ -103,7 +122,6 @@ const ProfileSettings = () => {
     <div className="profile-page">
       <h1 className="user-profile">User Profile</h1>
       <div className="profile-content">
-        {/* Editable fields for each piece of user data */}
         <div className="profile-field">
           <label>First Name:</label>
           {editingField === 'first_name' ? (
@@ -113,7 +131,7 @@ const ProfileSettings = () => {
           )}
           <button onClick={() => handleEdit('first_name')}>Edit</button>
         </div>
-
+        
         <div className="profile-field">
           <label>Last Name:</label>
           {editingField === 'last_name' ? (

@@ -61,13 +61,12 @@ function Navbar() {
                 Orders
               </Link>
             </li>
-            {/* <hr /> */}
-            {/* <hr /> */}
-            {/* <li>
-              <Link to="/Login" onClick={closeMenu}>
-                Login
+            <hr />
+            <li>
+              <Link to="/payment" onClick={closeMenu}>
+                payment
               </Link>
-            </li> */}
+            </li>
           </ul>
         </div>
       </div>

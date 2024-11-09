@@ -1,8 +1,10 @@
+// LoginRegister.js
 import React, { useState, useEffect } from 'react';
 import '../styles/LoginRegister.css';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { loginUser, registerUser } from '../Components/auth';
 
 const LoginRegister = () => {
     const navigate = useNavigate();
@@ -22,8 +24,6 @@ const LoginRegister = () => {
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
 
-    const apiUrl = 'https://62be-2405-201-8006-7041-5082-8df6-3712-a11f.ngrok-free.app/user';
-
     useEffect(() => {
         const savedEmail = localStorage.getItem('email');
         const savedPassword = localStorage.getItem('password');
@@ -36,38 +36,29 @@ const LoginRegister = () => {
 
     const registerLink = () => {
         setAction('register');
-        setStep(1); // Reset to first step when switching to register
+        setStep(1);
     };
 
     const loginLink = () => setAction('login');
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        const userDetails = {
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            password: password,
+            phone: phoneNumber,
+            address: address,
+            city: city,
+            state: state,
+            country: country,
+            pin_code: pincode,
+            date_of_birth: dateOfBirth,
+        };
         try {
-            const response = await fetch(`${apiUrl}/signup/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    first_name: firstName,
-                    last_name: lastName,
-                    email: email,
-                    password: password,
-                    phone: phoneNumber,
-                    address: address,
-                    city: city,
-                    state: state,
-                    country: country,
-                    pin_code: pincode,
-                    date_of_birth: dateOfBirth
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to register");
-            }
-
-            const data = await response.json();
-            // setAction('bio-genres'); // Redirect to bio and genres page
+            await registerUser(userDetails);
+            navigate('/');
         } catch (error) {
             alert(error.message);
         }
@@ -76,28 +67,8 @@ const LoginRegister = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`${apiUrl}/login/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email,
-                    password
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error("Login failed");
-            }
-
-            const data = await response.json();
-            if (rememberMe) {
-                localStorage.setItem('email', email);
-                localStorage.setItem('password', password);
-            } else {
-                localStorage.removeItem('email');
-                localStorage.removeItem('password');
-            }
-            navigate('/'); // Redirect to chat page after successful login
+            await loginUser(email, password, rememberMe);
+            navigate('/');
         } catch (error) {
             alert(error.message);
         }
