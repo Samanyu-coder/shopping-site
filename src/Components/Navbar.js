@@ -88,6 +88,18 @@ function Navbar() {
             <li>
               <Link to="/orders" onClick={closeMenu}>Orders</Link>
             </li>
+            <hr />
+            <li>
+              <Link to="/payment" onClick={closeMenu}>
+                payment
+              </Link>
+            </li>
+            <hr />
+            <li>
+              <Link to="/payment" onClick={closeMenu}>
+                payment
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
