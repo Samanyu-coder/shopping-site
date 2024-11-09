@@ -1,13 +1,13 @@
 // ProductDetail.js
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/ProductDetail.css';
 import wishlistIcon from '../Images/wishlist-icon.png';
 
 function ProductDetail() {
   const { id } = useParams(); // Get the product ID from the URL
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -79,7 +79,7 @@ function ProductDetail() {
         user_id: userId,
         product_id: id,
       });
-      if (response.status === 200) {
+      if (response.status === 201) {
         alert('Added to cart');
       } else {
         throw new Error('Failed to add to cart');

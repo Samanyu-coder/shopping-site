@@ -1,14 +1,16 @@
 // Cart.js
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Cart.css';;
+import axios from 'axios';
+import '../styles/Cart.css';
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  
   const isLoggedIn = () => {
     const user = localStorage.getItem('user_id');
     return user ? user : null;
@@ -28,8 +30,10 @@ function Cart() {
       }
     })
       .then(response => {
-        if (Array.isArray(response.data)) {
-          setCartItems(response.data);
+        const cartData = response.data.cart;
+        if (cartData.viewCart) {
+          setCartItems(Object.values(cartData).filter(item => typeof item === 'object'));
+          setTotalPrice(response.data.total_price);
         } else {
           setCartItems([]);
         }
@@ -41,6 +45,53 @@ function Cart() {
         setLoading(false);
       });
   }, [navigate]);
+
+  const handleRemoveFromCart = async (productId) => {
+    const userId = isLoggedIn();
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/user/remove_from_cart/${userId}/${productId}/`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
+        }
+      });
+      if (response.status === 200) {
+        setCartItems(cartItems.filter(item => item.id !== productId));
+        alert('Product removed from cart');
+      } else {
+        throw new Error('Failed to remove product from cart');
+      }
+    } catch (error) {
+      console.error('Error removing product from cart:', error);
+      alert('Error removing product from cart');
+    }
+  };
+
+  const handleClearCart = async () => {
+    const userId = isLoggedIn();
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/user/clear_cart/${userId}/`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
+        }
+      });
+      if (response.status === 200) {
+        setCartItems([]);
+        setTotalPrice(0);
+        alert('Cart cleared successfully');
+      } else {
+        throw new Error('Failed to clear cart');
+      }
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      alert('Error clearing cart');
+    }
+  };
+
+  const handleCheckout = () => {
+    navigate('/payment', { state: { orderId: 4 } });  // replace 4 with actual order ID if available
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -60,12 +111,16 @@ function Cart() {
       <ul>
         {cartItems.map((item, index) => (
           <li key={index}>
-            <p>{item.product_name}</p>
-            <p>{item.quantity}</p>
-            <p>${item.price}</p>
+            <p>{item.name}</p>
+            <p>Quantity: {item.cart_quantity}</p>
+            <p>Price: ${item.price}</p>
+            <button onClick={() => handleRemoveFromCart(item.id)}>Remove</button>
           </li>
         ))}
       </ul>
+      <h3>Total Price: ${totalPrice}</h3>
+      <button onClick={handleClearCart}>Clear Cart</button>
+      <button onClick={handleCheckout} className="checkout-button">Checkout</button>
     </div>
   );
 }

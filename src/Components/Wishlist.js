@@ -10,6 +10,7 @@ function Wishlist() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  
   const isLoggedIn = () => {
     const user = localStorage.getItem('user_id');
     return user ? user : null;
@@ -22,7 +23,7 @@ function Wishlist() {
     }
 
     const userId = isLoggedIn();
-    axios.get(`${process.env.REACT_APP_API_BASE_URL}/user/get_wishlist/${userId}`, {
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/user/get_wishlist/${userId}/`, {
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',
@@ -57,8 +58,14 @@ function Wishlist() {
 
   return (
     <div className="wishlist">
-      {wishlist.map(product => (
-        <Product key={product.id} product={product} />
+      {wishlist.map((wish, index) => (
+        <div key={index} className="wishlist-item">
+          <h3>{wish.product.name}</h3>
+          <p>Description: {wish.product.description}</p>
+          <p>Price: ${wish.product.price}</p>
+          <p>Brand: {wish.product.brand}</p>
+          <p>Status: {wish.product.available}</p>
+        </div>
       ))}
     </div>
   );
