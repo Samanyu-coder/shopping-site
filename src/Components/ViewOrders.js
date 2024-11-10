@@ -14,7 +14,7 @@ const ViewOrders = () => {
       }
 
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/order/get_all_orders/2/`);
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/order/get_all_orders/${userId}/`);
         
         if (!response.ok) {
           const text = await response.text();

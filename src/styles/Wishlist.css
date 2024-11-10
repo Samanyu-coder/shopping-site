@@ -1,6 +1,249 @@
 /* Wishlist.css */
 .wishlist {
-    padding: 20px;
-    text-align: center;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
   }
-  
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* Wishlist Item Styles */
+.wishlist-item {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.wishlist-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.wishlist-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: linear-gradient(to bottom, #2c5282, #4299e1);
+  border-radius: 4px 0 0 4px;
+}
+
+.wishlist-item h3 {
+  font-size: 1.25rem;
+  color: #2d3748;
+  margin: 0 0 1rem 0;
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wishlist-item p {
+  margin: 0.5rem 0;
+  color: #4a5568;
+  font-size: 1rem;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Status Styles */
+.wishlist-item p:last-child {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.status-available {
+  color: #48bb78;
+  font-weight: 500;
+}
+
+.status-unavailable {
+  color: #e53e3e;
+  font-weight: 500;
+}
+
+/* Price Styling */
+p:has(> .price) {
+  font-size: 1.25rem;
+  color: #2c5282;
+  font-weight: 600;
+}
+
+/* Action Buttons */
+.wishlist-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  grid-column: 1 / -1;
+}
+
+.wishlist-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+}
+
+.add-to-cart-btn {
+  background-color: #2c5282;
+  color: white;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #1a365d;
+}
+
+.remove-btn {
+  background-color: #fff;
+  color: #e53e3e;
+  border: 1px solid #e53e3e;
+}
+
+.remove-btn:hover {
+  background-color: #fff5f5;
+}
+
+/* Loading State */
+.wishlist-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  background: #f7fafc;
+  border-radius: 12px;
+  color: #4a5568;
+  font-size: 1.1rem;
+}
+
+/* Error State */
+.wishlist-error {
+  background: #fff5f5;
+  color: #e53e3e;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid #feb2b2;
+}
+
+/* Empty State */
+.wishlist-empty {
+  text-align: center;
+  padding: 3rem;
+  background: #f7fafc;
+  border-radius: 12px;
+  color: #4a5568;
+}
+
+.wishlist-empty-icon {
+  font-size: 3rem;
+  color: #cbd5e0;
+  margin-bottom: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .wishlist {
+      margin: 1rem auto;
+      padding: 0 1rem;
+  }
+
+  .wishlist-item {
+      padding: 1rem;
+      grid-template-columns: 1fr;
+  }
+
+  .wishlist-actions {
+      flex-direction: column;
+  }
+
+  .wishlist-item h3 {
+      font-size: 1.1rem;
+  }
+
+  .wishlist-item p {
+      font-size: 0.95rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .wishlist-item {
+      background: #2d3748;
+  }
+
+  .wishlist-item h3 {
+      color: #e2e8f0;
+  }
+
+  .wishlist-item p {
+      color: #a0aec0;
+  }
+
+  .wishlist-item::before {
+      background: linear-gradient(to bottom, #4299e1, #63b3ed);
+  }
+
+  .wishlist-empty {
+      background: #2d3748;
+      color: #e2e8f0;
+  }
+
+  .remove-btn {
+      background-color: #2d3748;
+      border-color: #fc8181;
+      color: #fc8181;
+  }
+
+  .remove-btn:hover {
+      background-color: #283141;
+  }
+
+  .wishlist-item p:last-child {
+      border-top-color: #4a5568;
+  }
+}
+
+/* Loading Animation */
+.loading-shimmer {
+  background: linear-gradient(
+      90deg,
+      #f0f0f0 25%,
+      #e0e0e0 50%,
+      #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

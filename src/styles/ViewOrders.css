@@ -1,92 +1,279 @@
 /* ViewOrders.css */
+.orders-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-  }
-  
-  .container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
+.orders-title {
+    font-size: 2rem;
+    color: #2d3748;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e2e8f0;
     text-align: center;
-    color: #333;
-  }
-  
-  .order {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    background-color: #fafafa;
-  }
-  
-  .order h3 {
-    margin-top: 0;
-    color: #1a73e8;
-  }
-  
-  .order p {
-    margin: 5px 0;
-    color: #555;
-  }
-  
-  .order-items {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .order-item {
-    margin-bottom: 15px;
-    padding: 10px;
-    background-color: #f1f1f1;
-    border-radius: 8px;
+}
+
+.orders-list {
     display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.order-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+}
+
+.order-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-  }
-  
-  .order-item img {
-    width: 80px;
-    height: auto;
-    border-radius: 5px;
-    margin-right: 15px;
-    border: 1px solid #ddd;
-  }
-  
-  .order-item p {
-    margin: 3px 0;
-  }
-  
-  .order-status {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.order-number {
+    font-size: 1.5rem;
+    color: #2d3748;
+    margin: 0;
+    font-weight: 600;
+}
+
+.order-date {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+.order-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.info-item {
+    margin: 0;
+}
+
+.info-label {
+    display: block;
+    color: #718096;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+}
+
+.info-value {
+    color: #2d3748;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+/* Status Badges */
+.status-badge {
     display: inline-block;
-    padding: 5px 10px;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 4px;
-    color: #fff;
-  }
-  
-  .status-pending {
-    background-color: #fbbc05;
-  }
-  
-  .status-paid {
-    background-color: #34a853;
-  }
-  
-  .order-summary {
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .empty-orders {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-pending {
+    background-color: #feebc8;
+    color: #c05621;
+}
+
+.status-processing {
+    background-color: #bee3f8;
+    color: #2c5282;
+}
+
+.status-completed {
+    background-color: #c6f6d5;
+    color: #2f855a;
+}
+
+.status-cancelled {
+    background-color: #fed7d7;
+    color: #c53030;
+}
+
+/* Payment Badge */
+.payment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.payment-paid {
+    background-color: #c6f6d5;
+    color: #2f855a;
+}
+
+.payment-pending {
+    background-color: #feebc8;
+    color: #c05621;
+}
+
+/* Order Items Section */
+.order-items-title {
+    font-size: 1.25rem;
+    color: #2d3748;
+    margin: 2rem 0 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.order-items-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+}
+
+.order-item {
+    background: #f7fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.item-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+    background-color: #e2e8f0;
+}
+
+.item-details {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.item-name {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.item-quantity,
+.item-price {
+    display: flex;
+    justify-content: space-between;
+    color: #4a5568;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.no-orders {
     text-align: center;
-    color: #777;
-  }
-  
+    padding: 3rem;
+    background: #f7fafc;
+    border-radius: 12px;
+    color: #4a5568;
+    font-size: 1.1rem;
+}
+
+.error-message {
+    text-align: center;
+    padding: 2rem;
+    background: #fff5f5;
+    border-radius: 12px;
+    color: #c53030;
+    border: 1px solid #feb2b2;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .orders-container {
+        margin: 1rem auto;
+        padding: 0 1rem;
+    }
+
+    .order-card {
+        padding: 1.5rem;
+    }
+
+    .order-info {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .order-items-list {
+        grid-template-columns: 1fr;
+    }
+
+    .orders-title {
+        font-size: 1.5rem;
+    }
+
+    .order-number {
+        font-size: 1.25rem;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .orders-container {
+        background-color: #1a202c;
+    }
+
+    .order-card {
+        background-color: #2d3748;
+        border-color: #4a5568;
+    }
+
+    .orders-title,
+    .order-number,
+    .info-value,
+    .item-name {
+        color: #e2e8f0;
+    }
+
+    .info-label,
+    .order-date {
+        color: #a0aec0;
+    }
+
+    .order-header,
+    .order-items-title {
+        border-color: #4a5568;
+    }
+
+    .order-item {
+        background-color: #2d3748;
+    }
+
+    .item-quantity,
+    .item-price {
+        color: #cbd5e0;
+    }
+
+    .no-orders {
+        background-color: #2d3748;
+        color: #e2e8f0;
+    }
+}
