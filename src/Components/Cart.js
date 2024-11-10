@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { setOrderId } from '../Components/localStorageUtils'; // Import the utility function
+import { setOrderId } from '../Components/localStorageUtils';
 import '../styles/Cart.css';
 
 function Cart() {
@@ -9,7 +9,7 @@ function Cart() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [orderConfirmed, setOrderConfirmed] = useState(false); // Track if order is confirmed
+  const [orderConfirmed, setOrderConfirmed] = useState(false);
   const navigate = useNavigate();
 
   const isLoggedIn = () => {
@@ -22,7 +22,6 @@ function Cart() {
       navigate('/login');
       return;
     }
-
     const userId = isLoggedIn();
     axios
       .get(`${process.env.REACT_APP_API_BASE_URL}/user/get_cart/${userId}/`, {
@@ -48,18 +47,60 @@ function Cart() {
       });
   }, [navigate]);
 
+  const handleQuantityChange = (itemId, quantity) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === itemId ? { ...item, cart_quantity: quantity } : item
+      )
+    );
+  };
+
+  const handleUpdateCart = async (itemId) => {
+    const userId = isLoggedIn();
+    const item = cartItems.find((item) => item.id === itemId);
+    if (!item) return;
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/user/update_cart/${userId}/`,
+        {
+          cart: { [itemId]: item.cart_quantity },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
+      if (response.status === 200) {
+        setTotalPrice(response.data.total_price);
+        alert('Cart updated successfully');
+      }
+    } catch (error) {
+      console.error('Error updating cart:', error);
+      alert('Error updating cart');
+    }
+  };
+
   const handleConfirmCart = async () => {
     const userId = isLoggedIn();
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/order/create_order/${userId}/`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true',
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/order/create_order/${userId}/`,
+        {
+          payment_method: 'cod', // default to COD initially
         },
-      });
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
       if (response.status === 200) {
         const orderId = response.data.id;
-        setOrderId(orderId); // Store order ID in local storage
+        setOrderId(orderId);
         setOrderConfirmed(true);
         alert('Cart confirmed. You can proceed to checkout.');
       }
@@ -72,32 +113,45 @@ function Cart() {
   const handleCheckout = () => {
     if (orderConfirmed) {
       const paymentMethod = window.confirm("Choose Payment Method:\n\nPress OK for 'By Card'\nPress Cancel for 'By COD'");
-
       if (paymentMethod) {
-        // If "By Card" is chosen, navigate to the payment page
         navigate('/payment');
       } else {
-        // If "By COD" is chosen, hit the payment API with empty credentials
-        const orderId = localStorage.getItem('order_id');
-        if (orderId) {
-          axios
-            .post(`${process.env.REACT_APP_API_BASE_URL}/payment/make_payment/${orderId}/`, {
-              cardNumber: '',
-              cardExpiry: '',
-              cardCVV: '',
-            })
-            .then((response) => {
-              alert('Payment successful by COD. Thank you for your order!');
-              navigate('/orders'); // Redirect to orders page after successful COD payment
-            })
-            .catch((error) => {
-              console.error('Error processing COD payment:', error);
-              alert('Payment successful by COD. Thank you for your order!');
-            });
-        } else {
-          alert('Order ID not found. Please confirm your cart again.');
-        }
+        handlePayment('cod');
       }
+    }
+  };
+
+  const handlePayment = async (paymentMethod) => {
+    const userId = isLoggedIn();
+    const orderId = localStorage.getItem('order_id');
+    if (!orderId) {
+      alert('Order ID not found. Please confirm your cart again.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/order/create_order/${userId}/`,
+        {
+          payment_method: paymentMethod,
+          address: '', // optionally pass the address or use the default
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
+      if (paymentMethod === 'cod') {
+        alert('Payment successful by COD. Thank you for your order!');
+      } else {
+        alert('Payment successful by Card. Thank you for your order!');
+      }
+      navigate('/orders');
+    } catch (error) {
+      console.error('Error processing payment:', error);
+      alert('Error processing payment');
     }
   };
 
@@ -159,7 +213,17 @@ function Cart() {
                 {cartItems.map((item, index) => (
                   <li key={index}>
                     <p>{item.name}</p>
-                    <p>Quantity: {item.cart_quantity}</p>
+                    <p>Quantity: 
+                      <select
+                        value={item.cart_quantity}
+                        onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+                      >
+                        {[...Array(10).keys()].map((qty) => (
+                          <option key={qty} value={qty + 1}>{qty + 1}</option>
+                        ))}
+                      </select>
+                      <button onClick={() => handleUpdateCart(item.id)}>Update</button>
+                    </p>
                     <p>Price: ${item.price}</p>
                     <button onClick={() => handleRemoveFromCart(item.id)}>Remove</button>
                   </li>
@@ -167,12 +231,8 @@ function Cart() {
               </ul>
               <h3>Total Price: ${totalPrice}</h3>
               <button onClick={handleClearCart}>Clear Cart</button>
-              <button onClick={handleConfirmCart} className="confirm-cart-button">
-                Confirm Cart
-              </button>
-              <button onClick={handleCheckout} className="checkout-button" disabled={!orderConfirmed}>
-                Checkout
-              </button>
+              <button onClick={handleConfirmCart} className="confirm-cart-button">Confirm Cart</button>
+              <button onClick={handleCheckout} className="checkout-button" disabled={!orderConfirmed}>Checkout</button>
             </>
           )}
         </>

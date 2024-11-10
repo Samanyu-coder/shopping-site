@@ -1,5 +1,3 @@
-/* Cart.css */
-
 .cart {
   width: 80%;
   max-width: 800px;
@@ -42,7 +40,37 @@
   color: #555;
 }
 
-.cart li button {
+.quantity-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-container select {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.quantity-container button {
+  padding: 6px 10px;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.quantity-container button:hover {
+  background-color: #43a047;
+}
+
+.cart li button.remove {
   padding: 8px 12px;
   background-color: #ff4d4f;
   border: none;
@@ -53,7 +81,7 @@
   transition: background-color 0.3s;
 }
 
-.cart li button:hover {
+.cart li button.remove:hover {
   background-color: #d9363e;
 }
 
