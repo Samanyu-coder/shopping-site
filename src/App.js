@@ -1,8 +1,9 @@
 // App.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
+import { getOrderId } from './Components/localStorageUtils'; // Import getOrderId utility
 import Navbar from './Components/Navbar';
 import ProductList from './Components/ProductList';
 import ProductDetail from './Components/ProductDetail';
@@ -14,12 +15,17 @@ import Footer from './Components/Footer';
 import ProfileSettings from './Components/ProfileSettings';
 import PaymentForm from './Components/PaymentForm';
 import ViewOrders from './Components/ViewOrders';
+// import '../src/App.css';
 
-// Initialize Stripe with your publishable key
 const stripePromise = loadStripe('pk_test_51QH8ZvKNo5SzSfyaU7OFa34fOQb3Ib3XYzIuq7WDz4AUDrJvUTfJUKz716avTN44CGZnSwwZjhOfU4oCLjqDQFhK00AP8iPYdO');
 
 function App() {
-  const orderId = '4'; // Replace with actual order ID
+  const [orderId, setOrderId] = useState(null);
+
+  useEffect(() => {
+    const storedOrderId = getOrderId(); // Get order ID from local storage
+    setOrderId(storedOrderId);
+  }, []);
 
   return (
     <Router>

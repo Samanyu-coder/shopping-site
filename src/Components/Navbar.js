@@ -38,6 +38,13 @@ function Navbar() {
     }
   };
 
+  const handleSignOut = () => {
+    localStorage.clear();
+    alert('You have been signed out.');
+    navigate('/login');
+    closeMenu();
+  };
+
   return (
     <>
       <nav className="navbar">
@@ -82,11 +89,15 @@ function Navbar() {
             </li>
             <hr />
             <li>
-              <Link to="/payment" onClick={closeMenu}>
-                Payment
-              </Link>
+              <Link to="/payment" onClick={closeMenu}>Payment</Link>
             </li>
             <hr />
+            {/* Sign Out Option */}
+            <li>
+              <button onClick={handleSignOut} className="sign-out-button">
+                Sign Out
+              </button>
+            </li>
           </ul>
         </div>
       </div>

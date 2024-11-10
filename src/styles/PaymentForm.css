@@ -1,37 +1,112 @@
-/* PaymentForm.css */
+/* PaymentForm.css - Colorful Card Theme */
+
 .payment-form {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 350px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #4A90E2, #50E3C2, #F5A623);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.payment-form::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, #fff, transparent);
+  opacity: 0.3;
+  border-radius: 50%;
+}
+
+.payment-form::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, #fff, transparent);
+  opacity: 0.2;
+  border-radius: 50%;
+}
+
+/* Card Chip */
+.card-chip {
+  width: 40px;
+  height: 28px;
+  background-color: #FFD700;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+/* Card Element Styling */
+#card-element {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  font-size: 1em;
+  color: #fff;
+}
+
+#card-element input {
+  color: #fff;
+}
+
+.error-message {
+  color: #FFCDD2;
+  font-size: 0.9em;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Pay Button */
+.pay-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(90deg, #FF8A65, #FF5252);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.pay-button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, #FF5252, #FF8A65);
+}
+
+.pay-button:disabled {
+  background-color: #BDBDBD;
+  cursor: not-allowed;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .payment-form {
+    padding: 15px;
   }
-  
+
   #card-element {
-    margin-bottom: 20px;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
   }
-  
-  .error-message {
-    color: red;
-    margin-top: 10px;
-  }
-  
+
   .pay-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    font-size: 1em;
   }
-  
-  .pay-button:disabled {
-    background-color: #ddd;
-    cursor: not-allowed;
-  }
-  
+}
