@@ -6,6 +6,7 @@ import '../styles/Cart.css';
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
+  const [selectedQuantities, setSelectedQuantities] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,8 +34,13 @@ function Cart() {
       .then((response) => {
         const cartData = response.data.cart;
         if (cartData.viewCart) {
-          setCartItems(Object.values(cartData).filter((item) => typeof item === 'object'));
+          const items = Object.values(cartData).filter((item) => typeof item === 'object');
+          setCartItems(items);
           setTotalPrice(response.data.total_price);
+          // Initialize selected quantities to current cart quantities
+          const initialQuantities = {};
+          items.forEach(item => initialQuantities[item.id] = item.cart_quantity);
+          setSelectedQuantities(initialQuantities);
         } else {
           setCartItems([]);
         }
@@ -48,11 +54,10 @@ function Cart() {
   }, [navigate]);
 
   const handleQuantityChange = (itemId, quantity) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId ? { ...item, cart_quantity: quantity } : item
-      )
-    );
+    setSelectedQuantities((prev) => ({
+      ...prev,
+      [itemId]: quantity,
+    }));
   };
 
   const handleUpdateCart = async (itemId) => {
@@ -64,7 +69,7 @@ function Cart() {
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/user/update_cart/${userId}/`,
         {
-          cart: { [itemId]: item.cart_quantity },
+          cart: { [itemId]: selectedQuantities[itemId] },
         },
         {
           headers: {
@@ -74,7 +79,17 @@ function Cart() {
         }
       );
       if (response.status === 200) {
-        setTotalPrice(response.data.total_price);
+        setCartItems((prevItems) =>
+          prevItems.map((item) =>
+            item.id === itemId ? { ...item, cart_quantity: response.data.updated_quantity } : item
+          )
+        );
+        // Update total price
+        const updatedTotalPrice = cartItems.reduce(
+          (total, item) => total + (item.id === itemId ? selectedQuantities[itemId] : item.cart_quantity) * item.price,
+          0
+        );
+        setTotalPrice(updatedTotalPrice);
         alert('Cart updated successfully');
       }
     } catch (error) {
@@ -83,14 +98,11 @@ function Cart() {
     }
   };
 
-  const handleConfirmCart = async () => {
+  const handleRemoveFromCart = async (itemId) => {
     const userId = isLoggedIn();
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/order/create_order/${userId}/`,
-        {
-          payment_method: 'cod', // default to COD initially
-        },
+      const response = await axios.delete(
+        `${process.env.REACT_APP_API_BASE_URL}/user/remove_from_cart/${userId}/${itemId}/`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -99,14 +111,33 @@ function Cart() {
         }
       );
       if (response.status === 200) {
-        const orderId = response.data.id;
-        setOrderId(orderId);
-        setOrderConfirmed(true);
-        alert('Cart confirmed. You can proceed to checkout.');
+        setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+        setTotalPrice((prevTotal) => prevTotal - response.data.removed_price);
+        alert('Item removed from cart.');
       }
     } catch (error) {
-      console.error('Error confirming cart:', error);
-      alert('Error confirming cart');
+      console.error('Error removing item from cart:', error);
+      alert('Error removing item from cart');
+    }
+  };
+
+  const handleClearCart = async () => {
+    const userId = isLoggedIn();
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/user/clear_cart/${userId}/`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
+        },
+      });
+      if (response.status === 200) {
+        setCartItems([]);
+        setTotalPrice(0);
+        alert('Cart cleared successfully.');
+      }
+    } catch (error) {
+      console.error('Error clearing the cart:', error);
+      alert('Error clearing the cart');
     }
   };
 
@@ -155,31 +186,14 @@ function Cart() {
     }
   };
 
-  const handleClearCart = async () => {
+  const handleConfirmCart = async () => {
     const userId = isLoggedIn();
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/user/clear_cart/${userId}/`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true',
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/order/create_order/${userId}/`,
+        {
+          payment_method: 'cod',
         },
-      });
-      if (response.status === 200) {
-        setCartItems([]);
-        setTotalPrice(0);
-        alert('Cart cleared successfully.');
-      }
-    } catch (error) {
-      console.error('Error clearing the cart:', error);
-      alert('Error clearing the cart');
-    }
-  };
-
-  const handleRemoveFromCart = async (itemId) => {
-    const userId = isLoggedIn();
-    try {
-      const response = await axios.delete(
-        `${process.env.REACT_APP_API_BASE_URL}/user/remove_from_cart/${userId}/${itemId}/`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -188,13 +202,14 @@ function Cart() {
         }
       );
       if (response.status === 200) {
-        setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
-        setTotalPrice((prevTotal) => prevTotal - response.data.removed_price);
-        alert('Item removed from cart.');
+        const orderId = response.data.id;
+        setOrderId(orderId);
+        setOrderConfirmed(true);
+        alert('Cart confirmed. You can proceed to checkout.');
       }
     } catch (error) {
-      console.error('Error removing item from cart:', error);
-      alert('Error removing item from cart');
+      console.error('Error confirming cart:', error);
+      alert('Error confirming cart');
     }
   };
 
@@ -215,14 +230,19 @@ function Cart() {
                     <p>{item.name}</p>
                     <p>Quantity: 
                       <select
-                        value={item.cart_quantity}
+                        value={selectedQuantities[item.id]}
                         onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
                       >
                         {[...Array(10).keys()].map((qty) => (
                           <option key={qty} value={qty + 1}>{qty + 1}</option>
                         ))}
                       </select>
-                      <button onClick={() => handleUpdateCart(item.id)}>Update</button>
+                      <button
+                        onClick={() => handleUpdateCart(item.id)}
+                        disabled={selectedQuantities[item.id] === item.cart_quantity}
+                      >
+                        Update
+                      </button>
                     </p>
                     <p>Price: ${item.price}</p>
                     <button onClick={() => handleRemoveFromCart(item.id)}>Remove</button>
