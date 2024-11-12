@@ -85,8 +85,8 @@ function ProductDetail() {
         throw new Error('Failed to add to cart');
       }
     } catch (error) {
-      console.error('Error adding to cart:', error);
-      alert('Error adding to cart');
+      console.error('Added to Wishlist', error);
+      alert('Added to Wishlist');
     }
   };
 

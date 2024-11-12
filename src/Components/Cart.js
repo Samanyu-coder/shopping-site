@@ -74,7 +74,18 @@ function Cart() {
         }
       );
       if (response.status === 200) {
-        setTotalPrice(response.data.total_price);
+        setCartItems((prevItems) =>
+          prevItems.map((item) =>
+            item.id === itemId ? { ...item, cart_quantity: response.data.updated_quantity } : item
+          )
+        );
+  
+        // Recalculate the total price
+        const updatedTotalPrice = cartItems.reduce(
+          (total, item) => total + item.cart_quantity * item.price,
+          0
+        );
+        setTotalPrice(updatedTotalPrice);
         alert('Cart updated successfully');
       }
     } catch (error) {
