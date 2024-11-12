@@ -136,7 +136,7 @@ function ProductDetail() {
                 <ul>
                   {reviews.map((review, index) => (
                     <li key={index}>
-                      <p>{review.comment}</p>
+                      <p>{review.review}</p>
                       <p><strong>Rating:</strong> {review.rating}</p>
                     </li>
                   ))}
