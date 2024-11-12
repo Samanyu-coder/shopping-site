@@ -16,6 +16,7 @@ body {
 }
 
 .product-detail-container {
+  position: relative; /* Added for absolute positioning of wishlist */
   background-color: #ffffff;
   padding: 20px;
   border-radius: 8px;
@@ -76,9 +77,9 @@ body {
 }
 
 .wishlist-container {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  position: absolute; /* Make wishlist position absolute */
+  top: 60px; /* Position it at the top-right corner */
+  right: 10px;
 }
 
 .wishlist-button {
